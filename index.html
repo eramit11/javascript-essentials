@@ -1,1 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Essentials — Modern Web Development</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #141937;
+            --bg-card: #1a1f3a;
+            --accent-yellow: #ffd60a;
+            --accent-blue: #00d4ff;
+            --accent-purple: #b197fc;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+            --text-dim: #6c757d;
+            --code-bg: #0d1117;
+            --border-glow: rgba(0, 212, 255, 0.3);
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Archivo', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Grid */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Gradient Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-yellow), transparent);
+            top: -250px;
+            right: -250px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-blue), transparent);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--accent-purple), transparent);
+            top: 40%;
+            right: 10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-yellow), #ffa500);
+            color: var(--bg-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(255, 214, 10, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            font-family: 'Archivo', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Archivo', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-yellow), #ffa500);
+            color: var(--bg-primary);
+            box-shadow: 0 10px 40px rgba(255, 214, 10, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(255, 214, 10, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--accent-blue), transparent);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 1.5rem 0;
+            opacity: 0;
+            animation: slideDown 0.6s ease forwards 0.5s;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-yellow);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-yellow);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Content Sections */
+        .content-section {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 8rem 2rem;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .section-tag {
+            font-family: 'Space Mono', monospace;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        h2 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-yellow), var(--accent-blue));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* Code Block */
+        .code-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 4rem 0;
+            align-items: start;
+        }
+
+        .code-info h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .code-info p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .code-features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .code-features li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .code-features li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-yellow);
+            font-weight: 700;
+        }
+
+        .code-window {
+            background: var(--code-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .code-header {
+            background: #161b22;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .code-title {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .code-content {
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            display: block;
+            padding: 0.2rem 0;
+        }
+
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .variable { color: #ffa657; }
+        .operator { color: #ffd60a; }
+
+        /* Topic Cards */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .topic-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid rgba(177, 151, 252, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 214, 10, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .topic-card:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-purple);
+        }
+
+        .topic-card:hover::after {
+            opacity: 1;
+        }
+
+        .topic-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            opacity: 0.3;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+        }
+
+        .topic-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .topic-description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-yellow), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-secondary);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--text-dim);
+            margin-top: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 4rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .code-showcase {
+                grid-template-columns: 1fr;
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-yellow), var(--accent-blue), var(--accent-purple));
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Interactive Code Demo */
+        .interactive-demo {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            padding: 0.7rem 1.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        .demo-output {
+            background: var(--code-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            min-height: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-yellow);
+            border: 1px solid rgba(255, 214, 10, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="grid-background"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <nav>
+        <div class="nav-container">
+            <span class="logo" style="cursor: pointer;" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">{ JS }</span>
+            <ul class="nav-links">
+                <li><a href="#fundamentals">Fundamentals</a></li>
+                <li><a href="#advanced">Advanced</a></li>
+                <li><a href="#dom">DOM</a></li>
+                <li><a href="#async">Async</a></li>
+                <li><a href="#best-practices">Best Practices</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">ES6+ Ready</div>
+            <h1>JavaScript<br>Essentials</h1>
+            <p class="hero-subtitle">Master the language that powers the modern web. From fundamentals to advanced patterns.</p>
+            <div class="cta-buttons">
+                <a href="#fundamentals" class="btn btn-primary">Start Learning</a>
+                <a href="#interactive" class="btn btn-secondary">Try Interactive Demo</a>
+            </div>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <section class="content-section" id="fundamentals">
+        <div class="section-header">
+            <span class="section-tag">// Core Concepts</span>
+            <h2>Fundamentals</h2>
+            <p class="section-description">Everything you need to build a solid foundation in JavaScript programming.</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <span class="feature-icon">📦</span>
+                <h3 class="feature-title">Variables & Types</h3>
+                <p class="feature-description">Master let, const, and var declarations. Understand primitive types, reference types, and type coercion.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3 class="feature-title">Functions</h3>
+                <p class="feature-description">From function declarations to arrow functions, closures, and higher-order functions.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3 class="feature-title">Objects & Arrays</h3>
+                <p class="feature-description">Deep dive into object manipulation, destructuring, spread operators, and array methods.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔄</span>
+                <h3 class="feature-title">Control Flow</h3>
+                <p class="feature-description">Conditionals, loops, and logical operators to control program execution.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎨</span>
+                <h3 class="feature-title">ES6+ Features</h3>
+                <p class="feature-description">Template literals, destructuring, default parameters, rest/spread, and more.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🛠️</span>
+                <h3 class="feature-title">Operators</h3>
+                <p class="feature-description">Arithmetic, comparison, logical, and ternary operators for effective computation.</p>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Primitive Types</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Array Methods</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Possibilities</div>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">🎯 Variables & Data Types Demo</h3>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="demoVariables()">Variables (let/const)</button>
+                <button class="demo-btn" onclick="demoDataTypes()">Data Types</button>
+                <button class="demo-btn" onclick="demoTypeConversion()">Type Conversion</button>
+                <button class="demo-btn" onclick="demoOperators()">Operators</button>
+            </div>
+            <div class="demo-output" id="fundamentalsOutput">
+                Click a button above to explore JavaScript fundamentals!
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="code-showcase">
+            <div class="code-info">
+                <h3>Modern JavaScript Syntax</h3>
+                <p>ES6 introduced revolutionary features that make JavaScript more powerful and expressive. Arrow functions, destructuring, and template literals are now standard.</p>
+                <ul class="code-features">
+                    <li>Arrow functions with implicit returns</li>
+                    <li>Destructuring for cleaner code</li>
+                    <li>Template literals for string interpolation</li>
+                    <li>Spread operator for array/object manipulation</li>
+                    <li>Default parameters for flexible functions</li>
+                </ul>
+                <button class="btn btn-primary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Learn More</button>
+            </div>
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="code-dot dot-red"></div>
+                    <div class="code-dot dot-yellow"></div>
+                    <div class="code-dot dot-green"></div>
+                    <div class="code-title">modern-js.js</div>
+                </div>
+                <div class="code-content">
+<span class="code-line"><span class="comment">// Arrow Functions & Destructuring</span></span>
+<span class="code-line"><span class="keyword">const</span> <span class="variable">users</span> <span class="operator">=</span> [</span>
+<span class="code-line">  { <span class="variable">name</span>: <span class="string">'Alice'</span>, <span class="variable">age</span>: <span class="string">30</span> },</span>
+<span class="code-line">  { <span class="variable">name</span>: <span class="string">'Bob'</span>, <span class="variable">age</span>: <span class="string">25</span> }</span>
+<span class="code-line">];</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="comment">// Map with arrow function</span></span>
+<span class="code-line"><span class="keyword">const</span> <span class="function">names</span> <span class="operator">=</span> users.<span class="function">map</span>(</span>
+<span class="code-line">  ({ <span class="variable">name</span> }) <span class="operator">=></span> name</span>
+<span class="code-line">);</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="comment">// Template Literals</span></span>
+<span class="code-line"><span class="keyword">const</span> <span class="function">greet</span> <span class="operator">=</span> (<span class="variable">name</span>) <span class="operator">=></span></span>
+<span class="code-line">  <span class="string">`Hello, ${name}!`</span>;</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="comment">// Spread & Rest</span></span>
+<span class="code-line"><span class="keyword">const</span> <span class="function">merge</span> <span class="operator">=</span> (<span class="operator">...</span><span class="variable">arrays</span>) <span class="operator">=></span></span>
+<span class="code-line">  [<span class="operator">...</span><span class="keyword">new</span> <span class="function">Set</span>(arrays.<span class="function">flat</span>())];</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="advanced">
+        <div class="section-header">
+            <span class="section-tag">// Advanced Topics</span>
+            <h2>Level Up Your Skills</h2>
+            <p class="section-description">Deep dive into advanced JavaScript concepts and patterns.</p>
+        </div>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-number">01</div>
+                <h3 class="topic-title">Closures & Scope</h3>
+                <p class="topic-description">Understand lexical scope, execution contexts, and how closures work under the hood.</p>
+            </div>
+            <div class="topic-card">
+                <div class="topic-number">02</div>
+                <h3 class="topic-title">Prototypes & Classes</h3>
+                <p class="topic-description">Master JavaScript's prototypal inheritance and modern class syntax.</p>
+            </div>
+            <div class="topic-card">
+                <div class="topic-number">03</div>
+                <h3 class="topic-title">Promises & Async</h3>
+                <p class="topic-description">Handle asynchronous operations with Promises, async/await, and error handling.</p>
+            </div>
+            <div class="topic-card">
+                <div class="topic-number">04</div>
+                <h3 class="topic-title">Event Loop</h3>
+                <p class="topic-description">Understand the call stack, callback queue, and how JavaScript handles concurrency.</p>
+            </div>
+            <div class="topic-card">
+                <div class="topic-number">05</div>
+                <h3 class="topic-title">Modules</h3>
+                <p class="topic-description">Organize code with ES6 modules, imports, exports, and dynamic imports.</p>
+            </div>
+            <div class="topic-card">
+                <div class="topic-number">06</div>
+                <h3 class="topic-title">Error Handling</h3>
+                <p class="topic-description">Robust error handling with try-catch, custom errors, and async error patterns.</p>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">⚡ Advanced Concepts Demo</h3>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="demoClosures()">Closures</button>
+                <button class="demo-btn" onclick="demoPrototypes()">Prototypes</button>
+                <button class="demo-btn" onclick="demoPromises()">Promises</button>
+                <button class="demo-btn" onclick="demoAsync()">Async/Await</button>
+            </div>
+            <div class="demo-output" id="advancedOutput">
+                Explore advanced JavaScript patterns and concepts!
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="dom">
+        <div class="section-header">
+            <span class="section-tag">// Browser APIs</span>
+            <h2>DOM Manipulation</h2>
+            <p class="section-description">Interact with web pages dynamically using the Document Object Model.</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🔍</span>
+                <h3 class="feature-title">Selecting Elements</h3>
+                <p class="feature-description">querySelector, getElementById, and modern selection methods for accessing DOM elements.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">✏️</span>
+                <h3 class="feature-title">Modifying Content</h3>
+                <p class="feature-description">Change text, HTML, attributes, and styles dynamically with JavaScript.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎭</span>
+                <h3 class="feature-title">Event Handling</h3>
+                <p class="feature-description">Listen and respond to user interactions, keyboard events, and custom events.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">➕</span>
+                <h3 class="feature-title">Creating Elements</h3>
+                <p class="feature-description">Dynamically create, insert, and remove DOM elements programmatically.</p>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">🎭 DOM Manipulation Demo</h3>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="demoCreateElement()">Create Element</button>
+                <button class="demo-btn" onclick="demoModifyStyles()">Modify Styles</button>
+                <button class="demo-btn" onclick="demoAddEvent()">Add Event Listener</button>
+                <button class="demo-btn" onclick="demoRemoveElement()">Remove Element</button>
+            </div>
+            <div class="demo-output" id="domOutput">
+                <div id="domPlayground" style="min-height: 80px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                    DOM Playground - Click buttons to manipulate this area!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="interactive">
+        <div class="section-header">
+            <span class="section-tag">// Try It Live</span>
+            <h2>Interactive Demo</h2>
+            <p class="section-description">See JavaScript in action with these interactive examples.</p>
+        </div>
+
+        <div class="interactive-demo">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Array Methods Demo</h3>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="runMap()">Array.map()</button>
+                <button class="demo-btn" onclick="runFilter()">Array.filter()</button>
+                <button class="demo-btn" onclick="runReduce()">Array.reduce()</button>
+                <button class="demo-btn" onclick="runForEach()">Array.forEach()</button>
+            </div>
+            <div class="demo-output" id="demoOutput">
+                Click a button above to see JavaScript in action!
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="best-practices">
+        <div class="section-header">
+            <span class="section-tag">// Professional Development</span>
+            <h2>Best Practices</h2>
+            <p class="section-description">Write clean, maintainable, and performant JavaScript code.</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <span class="feature-icon">✅</span>
+                <h3 class="feature-title">Code Quality</h3>
+                <p class="feature-description">Use const by default, meaningful variable names, and consistent formatting.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🚀</span>
+                <h3 class="feature-title">Performance</h3>
+                <p class="feature-description">Minimize DOM manipulation, debounce events, and optimize loops.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <h3 class="feature-title">Security</h3>
+                <p class="feature-description">Sanitize inputs, avoid eval(), and implement CSP headers.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🧪</span>
+                <h3 class="feature-title">Testing</h3>
+                <p class="feature-description">Write unit tests, use TDD, and ensure code reliability.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📚</span>
+                <h3 class="feature-title">Documentation</h3>
+                <p class="feature-description">Comment wisely, use JSDoc, and write self-documenting code.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">♿</span>
+                <h3 class="feature-title">Accessibility</h3>
+                <p class="feature-description">Make interactive elements keyboard accessible and screen reader friendly.</p>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">✅ Code Quality Demo</h3>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="demoBadCode()">❌ Bad Code</button>
+                <button class="demo-btn" onclick="demoGoodCode()">✅ Good Code</button>
+                <button class="demo-btn" onclick="demoPerformance()">Performance Tips</button>
+                <button class="demo-btn" onclick="demoSecurity()">Security Tips</button>
+            </div>
+            <div class="demo-output" id="bestPracticesOutput">
+                Learn how to write clean, maintainable JavaScript!
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">{ JavaScript Essentials }</div>
+            <p class="footer-text">Master the language that powers the modern web • 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        // Interactive Demo Functions
+        const sampleArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        function runMap() {
+            const result = sampleArray.map(n => n * 2);
+            document.getElementById('demoOutput').innerHTML = `
+                <strong>Array.map() - Transform each element</strong><br><br>
+                Original: [${sampleArray.join(', ')}]<br>
+                Doubled: [${result.join(', ')}]<br><br>
+                <span style="color: #8b949e;">const doubled = numbers.map(n => n * 2);</span>
+            `;
+        }
+
+        function runFilter() {
+            const result = sampleArray.filter(n => n % 2 === 0);
+            document.getElementById('demoOutput').innerHTML = `
+                <strong>Array.filter() - Keep elements that pass test</strong><br><br>
+                Original: [${sampleArray.join(', ')}]<br>
+                Even Numbers: [${result.join(', ')}]<br><br>
+                <span style="color: #8b949e;">const evens = numbers.filter(n => n % 2 === 0);</span>
+            `;
+        }
+
+        function runReduce() {
+            const result = sampleArray.reduce((acc, n) => acc + n, 0);
+            document.getElementById('demoOutput').innerHTML = `
+                <strong>Array.reduce() - Reduce to single value</strong><br><br>
+                Original: [${sampleArray.join(', ')}]<br>
+                Sum: ${result}<br><br>
+                <span style="color: #8b949e;">const sum = numbers.reduce((acc, n) => acc + n, 0);</span>
+            `;
+        }
+
+        function runForEach() {
+            let output = [];
+            sampleArray.forEach((n, i) => {
+                output.push(`Index ${i}: ${n}`);
+            });
+            document.getElementById('demoOutput').innerHTML = `
+                <strong>Array.forEach() - Execute function for each element</strong><br><br>
+                ${output.slice(0, 5).join('<br>')}<br>
+                <span style="color: #8b949e;">... and ${output.length - 5} more</span><br><br>
+                <span style="color: #8b949e;">numbers.forEach((n, i) => console.log(\`Index \${i}: \${n}\`));</span>
+            `;
+        }
+
+        // Smooth scrolling for navigation (completely silent)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const href = this.getAttribute('href');
+                if (href && href !== '#' && href.length > 1) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start'
+                        });
+                    }
+                }
+                return false;
+            }, false);
+        });
+
+        // Additional safeguard: prevent any default action on hash links
+        window.addEventListener('hashchange', function(e) {
+            e.preventDefault();
+        }, false);
+
+        // Add intersection observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.feature-card, .topic-card, .stat-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+
+        // ========== FUNDAMENTALS DEMOS ==========
+        function demoVariables() {
+            document.getElementById('fundamentalsOutput').innerHTML = `
+                <strong>Variables Demo: let vs const</strong><br><br>
+                <span style="color: #ff7b72;">let</span> <span style="color: #ffa657;">count</span> = <span style="color: #a5d6ff;">0</span>;<br>
+                count = <span style="color: #a5d6ff;">5</span>; <span style="color: #8b949e;">// ✓ Works - can reassign</span><br><br>
+                <span style="color: #ff7b72;">const</span> <span style="color: #ffa657;">PI</span> = <span style="color: #a5d6ff;">3.14159</span>;<br>
+                <span style="color: #8b949e;">// PI = 3.14; // ✗ Error - cannot reassign const</span><br><br>
+                <strong>Result:</strong> Use <span style="color: #ffd60a;">const</span> by default, <span style="color: #ffd60a;">let</span> when you need to reassign!
+            `;
+        }
+
+        function demoDataTypes() {
+            const examples = {
+                String: '"Hello World"',
+                Number: '42, 3.14, NaN, Infinity',
+                Boolean: 'true, false',
+                Undefined: 'let x; // x is undefined',
+                Null: 'let empty = null;',
+                Object: '{ name: "Alice", age: 30 }',
+                Array: '[1, 2, 3, 4, 5]'
+            };
+            
+            let output = '<strong>JavaScript Data Types</strong><br><br>';
+            for (let [type, example] of Object.entries(examples)) {
+                output += `<span style="color: #ffd60a;">${type}:</span> ${example}<br>`;
+            }
+            
+            document.getElementById('fundamentalsOutput').innerHTML = output;
+        }
+
+        function demoTypeConversion() {
+            document.getElementById('fundamentalsOutput').innerHTML = `
+                <strong>Type Conversion Examples</strong><br><br>
+                <span style="color: #8b949e;">// String to Number</span><br>
+                <span style="color: #d2a8ff;">Number</span>(<span style="color: #a5d6ff;">"123"</span>) = ${Number("123")}<br>
+                <span style="color: #d2a8ff;">parseInt</span>(<span style="color: #a5d6ff;">"123.45"</span>) = ${parseInt("123.45")}<br><br>
+                <span style="color: #8b949e;">// Number to String</span><br>
+                <span style="color: #d2a8ff;">String</span>(<span style="color: #a5d6ff;">123</span>) = "${String(123)}"<br>
+                (<span style="color: #a5d6ff;">123</span>).<span style="color: #d2a8ff;">toString</span>() = "${(123).toString()}"<br><br>
+                <span style="color: #8b949e;">// Truthy/Falsy</span><br>
+                <span style="color: #d2a8ff;">Boolean</span>(<span style="color: #a5d6ff;">0</span>) = ${Boolean(0)} <span style="color: #8b949e;">// falsy</span><br>
+                <span style="color: #d2a8ff;">Boolean</span>(<span style="color: #a5d6ff;">"hello"</span>) = ${Boolean("hello")} <span style="color: #8b949e;">// truthy</span>
+            `;
+        }
+
+        function demoOperators() {
+            const a = 10, b = 3;
+            document.getElementById('fundamentalsOutput').innerHTML = `
+                <strong>Operators Demo (a = ${a}, b = ${b})</strong><br><br>
+                <span style="color: #ffd60a;">Arithmetic:</span><br>
+                a + b = ${a + b}<br>
+                a - b = ${a - b}<br>
+                a * b = ${a * b}<br>
+                a / b = ${(a / b).toFixed(2)}<br>
+                a % b = ${a % b} <span style="color: #8b949e;">(modulus)</span><br>
+                a ** b = ${a ** b} <span style="color: #8b949e;">(exponentiation)</span><br><br>
+                <span style="color: #ffd60a;">Comparison:</span><br>
+                a > b = ${a > b}<br>
+                a === ${a} = ${a === 10}<br>
+                5 === "5" = ${5 === "5"} <span style="color: #8b949e;">(strict equality)</span><br>
+                5 == "5" = ${5 == "5"} <span style="color: #8b949e;">(loose equality)</span>
+            `;
+        }
+
+        // ========== ADVANCED DEMOS ==========
+        function demoClosures() {
+            const makeCounter = function() {
+                let count = 0;
+                return function() {
+                    count++;
+                    return count;
+                };
+            };
+            
+            const counter = makeCounter();
+            const results = [counter(), counter(), counter()];
+            
+            document.getElementById('advancedOutput').innerHTML = `
+                <strong>Closures Demo - Counter Function</strong><br><br>
+                <span style="color: #ff7b72;">function</span> <span style="color: #d2a8ff;">makeCounter</span>() {<br>
+                &nbsp;&nbsp;<span style="color: #ff7b72;">let</span> <span style="color: #ffa657;">count</span> = <span style="color: #a5d6ff;">0</span>;<br>
+                &nbsp;&nbsp;<span style="color: #ff7b72;">return</span> <span style="color: #ff7b72;">function</span>() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;count++;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff7b72;">return</span> count;<br>
+                &nbsp;&nbsp;};<br>
+                }<br><br>
+                <strong>Result:</strong><br>
+                counter() = ${results[0]}<br>
+                counter() = ${results[1]}<br>
+                counter() = ${results[2]}<br><br>
+                <span style="color: #8b949e;">The inner function "remembers" the count variable!</span>
+            `;
+        }
+
+        function demoPrototypes() {
+            document.getElementById('advancedOutput').innerHTML = `
+                <strong>Prototypes & Inheritance</strong><br><br>
+                <span style="color: #ff7b72;">class</span> <span style="color: #d2a8ff;">Animal</span> {<br>
+                &nbsp;&nbsp;<span style="color: #d2a8ff;">constructor</span>(name) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff7b72;">this</span>.name = name;<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;<span style="color: #d2a8ff;">speak</span>() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff7b72;">return</span> <span style="color: #a5d6ff;">\`\${this.name} makes a sound\`</span>;<br>
+                &nbsp;&nbsp;}<br>
+                }<br><br>
+                <span style="color: #ff7b72;">class</span> <span style="color: #d2a8ff;">Dog</span> <span style="color: #ff7b72;">extends</span> <span style="color: #d2a8ff;">Animal</span> {<br>
+                &nbsp;&nbsp;<span style="color: #d2a8ff;">speak</span>() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff7b72;">return</span> <span style="color: #a5d6ff;">\`\${this.name} barks\`</span>;<br>
+                &nbsp;&nbsp;}<br>
+                }<br><br>
+                <strong>Result:</strong> Dog inherits from Animal and overrides speak()
+            `;
+        }
+
+        function demoPromises() {
+            document.getElementById('advancedOutput').innerHTML = `
+                <strong>Working with Promises...</strong>
+            `;
+            
+            const promise = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve('Data loaded successfully!');
+                }, 1500);
+            });
+            
+            promise.then(result => {
+                document.getElementById('advancedOutput').innerHTML = `
+                    <strong>Promises Demo</strong><br><br>
+                    <span style="color: #ff7b72;">const</span> <span style="color: #ffa657;">promise</span> = <span style="color: #ff7b72;">new</span> <span style="color: #d2a8ff;">Promise</span>((resolve, reject) => {<br>
+                    &nbsp;&nbsp;<span style="color: #d2a8ff;">setTimeout</span>(() => {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #d2a8ff;">resolve</span>(<span style="color: #a5d6ff;">'Data loaded!'</span>);<br>
+                    &nbsp;&nbsp;}, <span style="color: #a5d6ff;">1500</span>);<br>
+                    });<br><br>
+                    promise.<span style="color: #d2a8ff;">then</span>(result => {<br>
+                    &nbsp;&nbsp;console.<span style="color: #d2a8ff;">log</span>(result);<br>
+                    });<br><br>
+                    <strong style="color: #3fb950;">✓ ${result}</strong><br>
+                    <span style="color: #8b949e;">Promises handle async operations elegantly!</span>
+                `;
+            });
+        }
+
+        function demoAsync() {
+            document.getElementById('advancedOutput').innerHTML = `
+                <strong>Async/Await Demo</strong><br><br>
+                <span style="color: #ff7b72;">async function</span> <span style="color: #d2a8ff;">fetchData</span>() {<br>
+                &nbsp;&nbsp;<span style="color: #ff7b72;">try</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff7b72;">const</span> response = <span style="color: #ff7b72;">await</span> <span style="color: #d2a8ff;">fetch</span>(<span style="color: #a5d6ff;">'api/data'</span>);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff7b72;">const</span> data = <span style="color: #ff7b72;">await</span> response.<span style="color: #d2a8ff;">json</span>();<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff7b72;">return</span> data;<br>
+                &nbsp;&nbsp;} <span style="color: #ff7b72;">catch</span> (error) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.<span style="color: #d2a8ff;">error</span>(error);<br>
+                &nbsp;&nbsp;}<br>
+                }<br><br>
+                <strong>Benefits:</strong><br>
+                ✓ Cleaner than .then() chains<br>
+                ✓ Looks like synchronous code<br>
+                ✓ Easy error handling with try/catch<br>
+                ✓ Better debugging experience
+            `;
+        }
+
+        // ========== DOM DEMOS ==========
+        let elementCounter = 0;
+        function demoCreateElement() {
+            const playground = document.getElementById('domPlayground');
+            const newDiv = document.createElement('div');
+            newDiv.className = 'demo-element';
+            newDiv.textContent = `Element ${++elementCounter}`;
+            newDiv.style.cssText = 'background: rgba(0, 212, 255, 0.2); padding: 1rem; margin: 0.5rem; border-radius: 8px; border: 1px solid var(--accent-blue); display: inline-block;';
+            playground.appendChild(newDiv);
+            
+            document.getElementById('domOutput').prepend(Object.assign(document.createElement('div'), {
+                innerHTML: `<span style="color: #3fb950;">✓ Created new element!</span> Total elements: ${playground.children.length}`,
+                style: 'margin-bottom: 1rem; color: var(--text-secondary);'
+            }));
+        }
+
+        function demoModifyStyles() {
+            const playground = document.getElementById('domPlayground');
+            const elements = playground.querySelectorAll('.demo-element');
+            if (elements.length === 0) {
+                document.getElementById('domOutput').prepend(Object.assign(document.createElement('div'), {
+                    innerHTML: `<span style="color: #ff7b72;">⚠ Create some elements first!</span>`,
+                    style: 'margin-bottom: 1rem;'
+                }));
+                return;
+            }
+            
+            const colors = ['#ffd60a', '#00d4ff', '#b197fc', '#3fb950', '#ff7b72'];
+            elements.forEach((el, i) => {
+                const color = colors[i % colors.length];
+                el.style.background = color + '33';
+                el.style.borderColor = color;
+                el.style.transform = `rotate(${(i * 5) - 10}deg)`;
+            });
+            
+            document.getElementById('domOutput').prepend(Object.assign(document.createElement('div'), {
+                innerHTML: `<span style="color: #3fb950;">✓ Styles modified!</span> Changed colors and rotation`,
+                style: 'margin-bottom: 1rem; color: var(--text-secondary);'
+            }));
+        }
+
+        function demoAddEvent() {
+            const playground = document.getElementById('domPlayground');
+            const elements = playground.querySelectorAll('.demo-element');
+            if (elements.length === 0) {
+                document.getElementById('domOutput').prepend(Object.assign(document.createElement('div'), {
+                    innerHTML: `<span style="color: #ff7b72;">⚠ Create some elements first!</span>`,
+                    style: 'margin-bottom: 1rem;'
+                }));
+                return;
+            }
+            
+            elements.forEach(el => {
+                el.onclick = function() {
+                    this.style.transform = `scale(${Math.random() * 0.5 + 1}) rotate(${Math.random() * 360}deg)`;
+                    this.textContent = '🎉 Clicked!';
+                };
+                el.style.cursor = 'pointer';
+            });
+            
+            document.getElementById('domOutput').prepend(Object.assign(document.createElement('div'), {
+                innerHTML: `<span style="color: #3fb950;">✓ Event listeners added!</span> Try clicking the elements`,
+                style: 'margin-bottom: 1rem; color: var(--text-secondary);'
+            }));
+        }
+
+        function demoRemoveElement() {
+            const playground = document.getElementById('domPlayground');
+            const elements = playground.querySelectorAll('.demo-element');
+            if (elements.length === 0) {
+                playground.innerHTML = '<div style="color: var(--text-secondary);">All elements removed! Create new ones.</div>';
+                return;
+            }
+            
+            elements[0].remove();
+            document.getElementById('domOutput').prepend(Object.assign(document.createElement('div'), {
+                innerHTML: `<span style="color: #ffd60a;">✓ Element removed!</span> Remaining: ${playground.children.length}`,
+                style: 'margin-bottom: 1rem; color: var(--text-secondary);'
+            }));
+        }
+
+        // ========== BEST PRACTICES DEMOS ==========
+        function demoBadCode() {
+            document.getElementById('bestPracticesOutput').innerHTML = `
+                <strong style="color: #ff7b72;">❌ Bad Code Example</strong><br><br>
+                <span style="color: #ff7b72;">var</span> x = <span style="color: #a5d6ff;">5</span>; <span style="color: #8b949e;">// Don't use var</span><br>
+                <span style="color: #ff7b72;">var</span> y = <span style="color: #a5d6ff;">10</span>;<br>
+                <span style="color: #ff7b72;">var</span> z = x + y;<br><br>
+                <span style="color: #ff7b72;">if</span>(x == <span style="color: #a5d6ff;">"5"</span>) { <span style="color: #8b949e;">// Loose equality (bad!)</span><br>
+                &nbsp;&nbsp;console.<span style="color: #d2a8ff;">log</span>(<span style="color: #a5d6ff;">"equals"</span>);<br>
+                }<br><br>
+                <strong>Issues:</strong><br>
+                ❌ Using var instead of const/let<br>
+                ❌ Non-descriptive variable names<br>
+                ❌ Using == instead of ===<br>
+                ❌ No proper spacing/formatting
+            `;
+        }
+
+        function demoGoodCode() {
+            document.getElementById('bestPracticesOutput').innerHTML = `
+                <strong style="color: #3fb950;">✅ Good Code Example</strong><br><br>
+                <span style="color: #ff7b72;">const</span> <span style="color: #ffa657;">firstNumber</span> = <span style="color: #a5d6ff;">5</span>;<br>
+                <span style="color: #ff7b72;">const</span> <span style="color: #ffa657;">secondNumber</span> = <span style="color: #a5d6ff;">10</span>;<br>
+                <span style="color: #ff7b72;">const</span> <span style="color: #ffa657;">sum</span> = firstNumber + secondNumber;<br><br>
+                <span style="color: #ff7b72;">if</span> (firstNumber === <span style="color: #a5d6ff;">5</span>) {<br>
+                &nbsp;&nbsp;console.<span style="color: #d2a8ff;">log</span>(<span style="color: #a5d6ff;">'Numbers match'</span>);<br>
+                }<br><br>
+                <strong>Best Practices:</strong><br>
+                ✓ Using const for immutable values<br>
+                ✓ Descriptive variable names<br>
+                ✓ Strict equality (===)<br>
+                ✓ Clean formatting and spacing<br>
+                ✓ Consistent code style
+            `;
+        }
+
+        function demoPerformance() {
+            document.getElementById('bestPracticesOutput').innerHTML = `
+                <strong>🚀 Performance Best Practices</strong><br><br>
+                <span style="color: #ffd60a;">1. Minimize DOM Access</span><br>
+                <span style="color: #8b949e;">// Bad: Multiple DOM queries</span><br>
+                document.querySelector('.item').style.color = 'red';<br>
+                document.querySelector('.item').style.fontSize = '20px';<br><br>
+                <span style="color: #8b949e;">// Good: Cache the element</span><br>
+                <span style="color: #ff7b72;">const</span> item = document.querySelector('.item');<br>
+                item.style.color = 'red';<br>
+                item.style.fontSize = '20px';<br><br>
+                <span style="color: #ffd60a;">2. Use Event Delegation</span><br>
+                <span style="color: #8b949e;">// Attach one listener to parent instead of many children</span><br><br>
+                <span style="color: #ffd60a;">3. Debounce/Throttle Events</span><br>
+                <span style="color: #8b949e;">// Limit expensive operations on scroll/resize</span>
+            `;
+        }
+
+        function demoSecurity() {
+            document.getElementById('bestPracticesOutput').innerHTML = `
+                <strong>🔒 Security Best Practices</strong><br><br>
+                <span style="color: #ff7b72;">❌ Never use eval()</span><br>
+                <span style="color: #8b949e;">// eval() executes strings as code - DANGEROUS!</span><br>
+                <span style="color: #ff7b72;">eval</span>(<span style="color: #a5d6ff;">"malicious code"</span>); <span style="color: #8b949e;">// DON'T DO THIS</span><br><br>
+                <span style="color: #3fb950;">✅ Sanitize User Input</span><br>
+                <span style="color: #ff7b72;">const</span> userInput = input.value.<span style="color: #d2a8ff;">trim</span>();<br>
+                <span style="color: #8b949e;">// Validate and sanitize before using</span><br><br>
+                <span style="color: #3fb950;">✅ Use textContent over innerHTML</span><br>
+                element.textContent = userInput; <span style="color: #8b949e;">// Safe</span><br>
+                <span style="color: #8b949e;">// element.innerHTML = userInput; // XSS risk!</span><br><br>
+                <span style="color: #3fb950;">✅ HTTPS for API Calls</span><br>
+                <span style="color: #3fb950;">✅ Never expose API keys in frontend</span><br>
+                <span style="color: #3fb950;">✅ Implement CSP headers</span>
+            `;
+        }
+    </script>
+</body>
+</html>
